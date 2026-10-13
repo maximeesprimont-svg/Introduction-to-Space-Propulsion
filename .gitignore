@@ -1,0 +1,15 @@
+# LaTeX temporary/generated files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
