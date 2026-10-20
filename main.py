@@ -8,7 +8,7 @@ def delta_V(delta_t,h_perigee,T_traget,mu,i):
     T_transfer=2*np.pi*(a_transfer**3/mu)**0.5
     delta_teta=2*np.pi*delta_t/T_transfer
     T_int=T_transfer*(1-delta_teta/(2*np.pi))
-    a_int=(mu(T_int/(2*np.pi))**2)**(1/3)
+    a_int=(mu*(T_int/(2*np.pi))**2)**(1/3)
     r_int=2*a_int-r0
     V_tranfer_perigee=(mu*(2/r0-1/a_transfer))**0.5
     V_int_perigee=(mu*(2/r0-1/a_int))**0.5
