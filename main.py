@@ -1,6 +1,7 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array([5.2,28.5])):
+def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array([5.2,28.5]),plot=True):
     r_earth=6371 #in km
     r0=r_earth+h_perigee # in km (mu must have the same unit)
     r_target=(mu*(T_target/(2*np.pi))**2)**(1/3)
@@ -31,6 +32,43 @@ def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array(
         print(f"\nFor an inclination of {round(i_array[c]*180/np.pi, 2)} degrees:")
         print(f"Question 3:\ntotal Delta V for Hohmann transfer: {delta_V_12[c]} km/s")
         print(f"Question 4:\ntotal Delta V for rendezvous and Hohmann transfer: {2*delta_V_rendevous+delta_V_12[c]} km/s")
+
+    if plot:
+        ax = plt.figure().add_subplot(projection='3d')
+        phi=np.linspace(0, 2 * np.pi, 100)
+        
+        #plot earth
+        theta = np.linspace(0, np.pi, 100)
+        x = r_earth * np.outer(np.cos(phi), np.sin(theta))
+        y = r_earth * np.outer(np.sin(phi), np.sin(theta))
+        z = r_earth * np.outer(np.ones(np.size(phi)), np.cos(theta))
+        ax.plot_surface(x, y, z)
+
+        #parametric curve of the GEO
+        x0=r_target*np.cos(phi)
+        y0=r_target*np.sin(phi)
+        z0=np.zeros(100)
+        ax.plot(x0, y0, z0, label='GEO')
+
+        #parametric curve of the GTO
+        for c in range(len(i_array)):
+            x1=a_transfer*np.cos(phi)+a_transfer-r0
+            b=(r0*r_target)**0.5 #semi minor axis
+            print(b)
+            y1=b*np.sin(phi)*np.cos(i_array[c])
+            z1=b*np.sin(phi)*np.sin(i_array[c])
+            ax.plot(x1, y1, z1, label=f'GTO at {round(i_array[c]*180/np.pi, 2)} degrees')
+
+        # Use the same scale on all three axes so the orbit is not distorted.
+        limits = np.array([ax.get_xlim3d(), ax.get_ylim3d(), ax.get_zlim3d()])
+        centers = limits.mean(axis=1)
+        radius = 0.5 * np.ptp(limits, axis=1).max()
+        ax.set_xlim3d(centers[0] - radius, centers[0] + radius)
+        ax.set_ylim3d(centers[1] - radius, centers[1] + radius)
+        ax.set_zlim3d(centers[2] - radius, centers[2] + radius)
+        ax.set_box_aspect((1, 1, 1))
+        plt.legend()
+        plt.show()
     return 2*delta_V_rendevous,delta_V_12,i_array
 
 def Part_2(delta_V_01,delta_V_12,i_array,m_payload=2200,Isp_array=np.array([235,315]),epsilon=0.12):
