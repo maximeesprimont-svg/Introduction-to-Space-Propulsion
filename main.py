@@ -1,6 +1,6 @@
 import numpy as np
 
-def Part_1(delta_t,h_perigee,T_target,mu,i_array):
+def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398400.4418,i_array=np.array([5.2,28.5])):
     r_earth=6371 #in km
     r0=r_earth+h_perigee # in km (mu must have the same unit)
     r_target=(mu*(T_target/(2*np.pi))**2)**(1/3)
@@ -17,7 +17,7 @@ def Part_1(delta_t,h_perigee,T_target,mu,i_array):
     V_target=(mu/r_target)**0.5
     i_array*=np.pi/180 # to convert to radians
     delta_V_12=(V_transfer_apogee**2+V_target**2-2*V_transfer_apogee*V_target*np.cos(i_array))**0.5
-
+    print("Part 1:")
     print(f"Question 1:\ntotal Delta V for rendezvous: {2*delta_V_rendevous} km/s")
     print(f"elapsed time for rendezvous: {T_int} s")
 
@@ -31,6 +31,19 @@ def Part_1(delta_t,h_perigee,T_target,mu,i_array):
         print(f"\nFor an inclination of {round(i_array[c]*180/np.pi, 2)} degrees:")
         print(f"Question 3:\ntotal Delta V for Hohmann transfer: {delta_V_12[c]} km/s")
         print(f"Question 4:\ntotal Delta V for rendezvous and Hohmann transfer: {2*delta_V_rendevous+delta_V_12[c]} km/s")
-    return 2*delta_V_rendevous+delta_V_12
+    return 2*delta_V_rendevous,delta_V_12,i_array
 
-Part_1(1800,250,86164,398400.4418,np.array([5.2,28.5]))
+def Part_2(delta_V_01,delta_V_12,i_array,m_payload=2200,Isp_array=np.array([235,315]),epsilon=0.12):
+    print("\nPart 2:")
+    for indice in range(len(i_array)):
+        mass_fraction12 = np.exp(-delta_V_12[indice]*1e3/(Isp_array*9.81)) #separation between tugged mass and untugged mass impulses
+        mass_fraction01 = np.exp(-delta_V_01/(Isp_array*9.81))
+        mprop12 = m_payload*(1-mass_fraction12)*(1-epsilon)/(mass_fraction12-epsilon)
+        mtug= mprop12/(1-epsilon) * 1/mass_fraction01
+        print(f"\nFor an inclination of {round(i_array[indice]*180/np.pi, 2)} degrees:")
+        for c in range(len(Isp_array)):
+            print(f"For an Isp of {Isp_array[c]} s the propellant mass for the Hohmann transfer is: {mprop12[c]} kg and the resulting tug total mass is {mtug[c]}")
+    return mtug
+
+delta_V_01,delta_V_12,i_array=Part_1()
+Part_2(delta_V_01,delta_V_12,i_array)
