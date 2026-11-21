@@ -1,6 +1,6 @@
 import numpy as np
 
-def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398400.4418,i_array=np.array([5.2,28.5])):
+def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array([5.2,28.5])):
     r_earth=6371 #in km
     r0=r_earth+h_perigee # in km (mu must have the same unit)
     r_target=(mu*(T_target/(2*np.pi))**2)**(1/3)
