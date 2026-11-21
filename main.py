@@ -1,9 +1,9 @@
 import numpy as np
 
-def delta_V(delta_t,h_perigee,T_traget,mu,i,details=False):
+def Part_1(delta_t,h_perigee,T_target,mu,i_array):
     r_earth=6371 #in km
     r0=r_earth+h_perigee # in km (mu must have the same unit)
-    r_target=(mu*(T_traget/(2*np.pi))**2)**(1/3)
+    r_target=(mu*(T_target/(2*np.pi))**2)**(1/3)
     a_transfer=(r0+r_target)/2
     T_transfer=2*np.pi*(a_transfer**3/mu)**0.5
     delta_teta=2*np.pi*delta_t/T_transfer
@@ -15,10 +15,22 @@ def delta_V(delta_t,h_perigee,T_traget,mu,i,details=False):
     delta_V_rendevous=V_transfer_perigee-V_int_perigee
     V_transfer_apogee=(mu*(2/r_target-1/a_transfer))**0.5
     V_target=(mu/r_target)**0.5
-    delta_V_target=V_target-V_transfer_apogee
-    delta_V_deviation=V_target*(2*(1-np.cos(i)))
-    if details:
-        print(r0,r_target,a_transfer,T_transfer,delta_teta,T_int,a_int,r_int,V_transfer_perigee,V_int_perigee,delta_V_rendevous,V_transfer_apogee,V_target,delta_V_target,delta_V_deviation)
-    return 2*delta_V_rendevous+delta_V_target+delta_V_deviation
+    i_array*=np.pi/180 # to convert to radians
+    delta_V_12=(V_transfer_apogee**2+V_target**2-2*V_transfer_apogee*V_target*np.cos(i_array))**0.5
 
-print(delta_V(1800,250,86164,398400.4418,5.2*np.pi/180,details=True))
+    print(f"Question 1:\ntotal Delta V for rendezvous: {2*delta_V_rendevous} km/s")
+    print(f"elapsed time for rendezvous: {T_int} s")
+
+    print(f"\nQuestion 2:\nsemi-major axis of GTO: {a_transfer} km")
+    print(f"velocity at perigee of GTO: {V_transfer_perigee} km/s")
+    print(f"Velocity at apogee of GTO: {V_transfer_apogee} km/s")
+    print(f"semi-major axis of GEO: {a_int} km")
+    print(f"Velocity at GEO: {V_target} km/s")
+
+    for c in range(len(i_array)):
+        print(f"\nFor an inclination of {round(i_array[c]*180/np.pi, 2)} degrees:")
+        print(f"Question 3:\ntotal Delta V for Hohmann transfer: {delta_V_12[c]} km/s")
+        print(f"Question 4:\ntotal Delta V for rendezvous and Hohmann transfer: {2*delta_V_rendevous+delta_V_12[c]} km/s")
+    return 2*delta_V_rendevous+delta_V_12
+
+Part_1(1800,250,86164,398400.4418,np.array([5.2,28.5]))
