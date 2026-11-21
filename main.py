@@ -38,10 +38,11 @@ def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array(
         phi=np.linspace(0, 2 * np.pi, 100)
         
         #plot earth
-        theta = np.linspace(0, np.pi, 100)
-        x = r_earth * np.outer(np.cos(phi), np.sin(theta))
-        y = r_earth * np.outer(np.sin(phi), np.sin(theta))
-        z = r_earth * np.outer(np.ones(np.size(phi)), np.cos(theta))
+        theta = np.linspace(0, np.pi, 10)
+        phi_earth=np.linspace(0, 2 * np.pi, 10) #to reduce the number of faces
+        x = r_earth * np.outer(np.cos(phi_earth), np.sin(theta))
+        y = r_earth * np.outer(np.sin(phi_earth), np.sin(theta))
+        z = r_earth * np.outer(np.ones(np.size(phi_earth)), np.cos(theta))
         ax.plot_surface(x, y, z)
 
         #parametric curve of the GEO
@@ -67,6 +68,9 @@ def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array(
         ax.set_ylim3d(centers[1] - radius, centers[1] + radius)
         ax.set_zlim3d(centers[2] - radius, centers[2] + radius)
         ax.set_box_aspect((1, 1, 1))
+        ax.set_xlabel("x (km)")
+        ax.set_ylabel("y (km)")
+        ax.set_zlabel("z (km)")
         plt.legend()
         plt.show()
     return 2*delta_V_rendevous,delta_V_12,i_array
