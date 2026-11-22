@@ -55,7 +55,6 @@ def Part_1(delta_t=1800,h_perigee=250,T_target=86164,mu=398600,i_array=np.array(
         for c in range(len(i_array)):
             x1=a_transfer*np.cos(phi)+a_transfer-r0
             b=(r0*r_target)**0.5 #semi minor axis
-            print(b)
             y1=b*np.sin(phi)*np.cos(i_array[c])
             z1=b*np.sin(phi)*np.sin(i_array[c])
             ax.plot(x1, y1, z1, label=f'GTO at {round(i_array[c]*180/np.pi, 2)} degrees')
@@ -79,12 +78,13 @@ def Part_2(delta_V_01,delta_V_12,i_array,m_payload=2200,Isp_array=np.array([235,
     print("\nPart 2:")
     for indice in range(len(i_array)):
         mass_fraction12 = np.exp(-delta_V_12[indice]*1e3/(Isp_array*9.81)) #separation between tugged mass and untugged mass impulses
-        mass_fraction01 = np.exp(-delta_V_01/(Isp_array*9.81))
-        mprop12 = m_payload*(1-mass_fraction12)*(1-epsilon)/(mass_fraction12-epsilon)
-        mtug= mprop12/(1-epsilon) * 1/mass_fraction01
+        mass_fraction01 = np.exp(-delta_V_01*1e3/(Isp_array*9.81))
+        m1 = m_payload*(1-mass_fraction12)/(mass_fraction12-epsilon)
+        mtug= m1*1/mass_fraction01
+        mproptotal=mtug*(1-epsilon)
         print(f"\nFor an inclination of {round(i_array[indice]*180/np.pi, 2)} degrees:")
         for c in range(len(Isp_array)):
-            print(f"For an Isp of {Isp_array[c]} s the propellant mass for the Hohmann transfer is: {mprop12[c]} kg and the resulting tug total mass is {mtug[c]}")
+            print(f"For an Isp of {Isp_array[c]} s the propellant mass for the Hohmann transfer is: {mproptotal[c]} kg and the resulting tug total mass is {mtug[c]}")
     return mtug
 
 delta_V_01,delta_V_12,i_array=Part_1()
