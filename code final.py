@@ -186,9 +186,9 @@ print(f"\nBest configuration    : {best[0]} + {best[1]} (m0 = {q3[best]['m0']:.1
 
 #Part 3
 #parameters part 3 (MMH/NTO, room temperature)
-OF=2.2                
+OF=1.85                
 rho_fuel=874          
-rho_ox=1440          
+rho_ox=1431          
 burn_fraction=0.01      
  
 #winning configuration of part 2
