@@ -87,5 +87,26 @@ def Part_2(delta_V_01,delta_V_12,i_array,m_payload=2200,Isp_array=np.array([235,
             print(f"For an Isp of {Isp_array[c]} s the propellant mass for the Hohmann transfer is: {mproptotal[c]} kg and the resulting tug total mass is {mtug[c]}")
     return mtug
 
+def Part_2_test(delta_V_01,delta_V_12,i_array,m_sat=2200,Isp_array=np.array([235,315]),epsilon=0.12):
+    print("\nPart 2:")
+    for indice in range(len(i_array)):
+        for Isp in Isp_array:
+            f1 = np.exp(-delta_V_01*1e3/(Isp*9.81)) #separation between tugged mass and untugged mass impulses
+            f2 = np.exp(-delta_V_12[indice]*1e3/(Isp*9.81)) 
+            A=np.array([[1-epsilon,  0,  0, -1,  0,  0],
+                        [  epsilon,  0,  0,  0,  0, -1],
+                        [        0,  1,  0,  0, -1, -1],
+                        [        1,-f1,  0,  0,  0,  0],
+                        [        0,  0,  1,  0,  0, -1],
+                        [        0,  1,-f2,  0,  0,  0]])
+            b=np.array([[0],
+                        [0],
+                        [0],
+                        [0],
+                    [m_sat],
+                        [0]])
+            m_vect=np.linalg.inv(A)@b
+            print(m_vect)
+
 delta_V_01,delta_V_12,i_array=Part_1()
-Part_2(delta_V_01,delta_V_12,i_array)
+Part_2_test(delta_V_01,delta_V_12,i_array)
