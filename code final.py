@@ -165,7 +165,7 @@ def question_2_p2():
             res[(site, prop)] = {"c": c, "ratio": f1*f2, "prop_frac": m_vect[3]/m_vect[0],
                                  "M0": m_vect[0], "M1": m_vect[1],
                                  "m_dry": m_vect[5],
-                                 "m_prop_ph": m_vect[3], "m_prop_ap": m_vect[4],
+                                 "m_prop_ph": m_vect[3]-m_vect[4], "m_prop_ap": m_vect[4],
                                  "m_prop": m_vect[3],
                                  "m_tug": m_vect[0], "m0": m+m_vect[0]}
     return res
