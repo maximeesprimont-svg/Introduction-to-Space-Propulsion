@@ -145,16 +145,29 @@ def question_2_p2():
         dv_ap = dv12["dv12_kou"] if site == "Kourou" else dv12["dv12_cape"]   
         for prop, I in isp.items():
             c = g0*I
-            A = np.exp(p["dv_01"]*1000/c)               
-            B = np.exp(dv_ap*1000/c)                    
-            M1 = m*(B-1)/(1-B*eps)                       
-            M0 = M1*A                                    
-            res[(site, prop)] = {"c": c, "ratio": A*B, "prop_frac": 1-1/(A*B),
-                                 "M0": M0, "M1": M1,
-                                 "m_dry": eps*M1,
-                                 "m_prop_ph": M0-M1, "m_prop_ap": M1*(1-eps),
-                                 "m_prop": M0-eps*M1,
-                                 "m_tug": M0, "m0": m+M0}
+            f1 = np.exp(p["dv_01"]*1000/c)
+            f2 = np.exp(dv_ap*1000/c)                    
+            A=np.array([[1-eps,  0,  0, -1,  0,  0],
+                        [  eps,  0,  0,  0,  0, -1],
+                        [    0,  1,  0,  0, -1, -1],
+                        [    1,-f1,  0,  0,  0,  0],
+                        [    0,  0,  1,  0,  0, -1],
+                        [    0,  1,-f2,  0,  0,  0]])
+            b=np.array([[0],
+                        [0],
+                        [0],
+                        [0],
+                        [m],
+                       [-m]])
+            m_vect=np.linalg.inv(A)@b
+            m_vect=m_vect.ravel()
+            print(m_vect)
+            res[(site, prop)] = {"c": c, "ratio": f1*f2, "prop_frac": m_vect[3]/m_vect[0],
+                                 "M0": m_vect[0], "M1": m_vect[1],
+                                 "m_dry": m_vect[5],
+                                 "m_prop_ph": m_vect[3], "m_prop_ap": m_vect[4],
+                                 "m_prop": m_vect[3],
+                                 "m_tug": m_vect[0], "m0": m+m_vect[0]}
     return res
  
 #question 3 (part 2)
