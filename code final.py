@@ -162,7 +162,7 @@ def question_2_p2():
             m_vect=np.linalg.inv(A)@b
             m_vect=m_vect.ravel()
             print(m_vect)
-            res[(site, prop)] = {"c": c, "ratio": f1*f2,
+            res[(site, prop)] = {"c": c,
                                  "M0": m_vect[0], "M1": m_vect[1],
                                  "m_dry": m_vect[5],
                                  "m_prop_ph": m_vect[3]-m_vect[4], "m_prop_ap": m_vect[4],
@@ -184,7 +184,6 @@ print("\nQuestion 2:")
 for (site, prop), r in q2.items():
     print(f"{site} | {prop}")
     print(f"c = g0*Isp            : {r['c']:.1f} m/s")
-    print(f"m_i/m_f               : {r['ratio']:.4f}")
  
 print("\nQuestion 3:")
 for (site, prop), r in q3.items():
