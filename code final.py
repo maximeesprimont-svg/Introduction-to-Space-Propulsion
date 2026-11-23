@@ -240,7 +240,7 @@ q2_p3=question_2_p3()
 
 print("\n==================== PART 3 ====================")
 print(f"\nWinning configuration : {site_win} + {prop_win}")
-print(f"m0                    : {q3[best]['m_tug']:.1f} kg")
+print(f"m_tug                    : {q3[best]['m_tug']:.1f} kg")
 print(f"m_prop                : {m_prop_win:.1f} kg")
  
 print("\nQuestion 1:")
