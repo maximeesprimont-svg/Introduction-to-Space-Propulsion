@@ -162,18 +162,18 @@ def question_2_p2():
             m_vect=np.linalg.inv(A)@b
             m_vect=m_vect.ravel()
             print(m_vect)
-            res[(site, prop)] = {"c": c, "ratio": f1*f2, "prop_frac": m_vect[3]/m_vect[0],
+            res[(site, prop)] = {"c": c, "ratio": f1*f2,
                                  "M0": m_vect[0], "M1": m_vect[1],
                                  "m_dry": m_vect[5],
                                  "m_prop_ph": m_vect[3]-m_vect[4], "m_prop_ap": m_vect[4],
                                  "m_prop": m_vect[3],
-                                 "m_tug": m_vect[0], "m0": m+m_vect[0]}
+                                 "m_tug": m_vect[0]}
     return res
  
 #question 3 (part 2)
 def question_3_p2():
     res = question_2_p2()
-    best = min(res, key=lambda k: res[k]["m0"])
+    best = min(res, key=lambda k: res[k]["m_tug"])
     return res, best
  
 q2=question_2_p2()
@@ -185,7 +185,6 @@ for (site, prop), r in q2.items():
     print(f"{site} | {prop}")
     print(f"c = g0*Isp            : {r['c']:.1f} m/s")
     print(f"m_i/m_f               : {r['ratio']:.4f}")
-    print(f"m_prop/m_i            : {r['prop_frac']:.4f}")
  
 print("\nQuestion 3:")
 for (site, prop), r in q3.items():
@@ -193,8 +192,7 @@ for (site, prop), r in q3.items():
     print(f"m_prop                : {r['m_prop']:.1f} kg")
     print(f"m_dry                 : {r['m_dry']:.1f} kg")
     print(f"m_tug                 : {r['m_tug']:.1f} kg")
-    print(f"m0                    : {r['m0']:.1f} kg")
-print(f"\nBest configuration    : {best[0]} + {best[1]} (m0 = {q3[best]['m0']:.1f} kg)")
+print(f"\nBest configuration    : {best[0]} + {best[1]} (m_tug = {q3[best]['m_tug']:.1f} kg)")
  
 
 #Part 3
@@ -210,6 +208,7 @@ isp_win=isp[prop_win]
 m_prop_win=q3[best]["m_prop"]
 M0_win=q3[best]["M0"]
 M1_win=q3[best]["M1"]
+Mdry_win=q3[best]["m_dry"]
 dv12_win={"Kourou": dv12["dv12_kou"], "Cape Canaveral": dv12["dv12_cape"]}[site_win]
  
 #question 1 (part 3)
@@ -228,7 +227,7 @@ def question_2_p3():
     c=g0*isp_win
     # mass at the start of the apogee burn (after the phasing burn dV_0-1)
     m_start=M1_win+m                      
-    m_end=eps*M1_win+m                     
+    m_end=Mdry_win+m                     
     m_burn=m_start-m_end
     t_burn_max=burn_fraction*p["T_gto"]
     mdot=m_burn/t_burn_max
@@ -241,7 +240,7 @@ q2_p3=question_2_p3()
 
 print("\n==================== PART 3 ====================")
 print(f"\nWinning configuration : {site_win} + {prop_win}")
-print(f"m0                    : {q3[best]['m0']:.1f} kg")
+print(f"m0                    : {q3[best]['m_tug']:.1f} kg")
 print(f"m_prop                : {m_prop_win:.1f} kg")
  
 print("\nQuestion 1:")
