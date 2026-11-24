@@ -216,10 +216,13 @@ def question_1_p3():
     m_ox=m_prop_win*OF/(1+OF)
     v_fuel=m_fuel/rho_fuel
     v_ox=m_ox/rho_ox
-    r_fuel=(3*v_fuel/(4*np.pi))**(1/3)   
-    r_ox=(3*v_ox/(4*np.pi))**(1/3)
+    r_fuel=(v_fuel/(2*np.pi))**(1/3)
+    r_ox=(v_ox/(2*np.pi))**(1/3)
+    L_fuel=2*r_fuel
+    L_ox=2*r_ox
     return {"m_fuel": m_fuel, "m_ox": m_ox, "v_fuel": v_fuel, "v_ox": v_ox,
-            "v_tot": v_fuel+v_ox, "r_fuel": r_fuel, "r_ox": r_ox}
+            "v_tot": v_fuel+v_ox, "r_fuel": r_fuel, "r_ox": r_ox,
+            "L_fuel": L_fuel, "L_ox": L_ox}
  
 #question 2 (part 3)
 def question_2_p3():
@@ -249,8 +252,10 @@ print(f"m_ox (NTO)            : {q1_p3['m_ox']:.1f} kg")
 print(f"V_fuel                : {q1_p3['v_fuel']:.4f} m^3 ({q1_p3['v_fuel']*1000:.1f} L)")
 print(f"V_ox                  : {q1_p3['v_ox']:.4f} m^3 ({q1_p3['v_ox']*1000:.1f} L)")
 print(f"V_total               : {q1_p3['v_tot']:.4f} m^3")
-print(f"R_sphere fuel tank    : {q1_p3['r_fuel']:.3f} m")
-print(f"R_sphere ox tank      : {q1_p3['r_ox']:.3f} m")
+print(f"R_cyl fuel tank       : {q1_p3['r_fuel']:.3f} m")
+print(f"L_cyl fuel tank       : {q1_p3['L_fuel']:.3f} m")
+print(f"R_cyl ox tank         : {q1_p3['r_ox']:.3f} m")
+print(f"L_cyl ox tank         : {q1_p3['L_ox']:.3f} m")
  
 print("\nQuestion 2:")
 print(f"T_GTO                 : {p['T_gto']:.1f} s")
